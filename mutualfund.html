@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mutual fund api data fetch</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div class="container-fluid text-center my-3">
+    <h3 class="header">API data fetching</h3>
+    <p class="text-dark">total number of schemes in this API is:</p>
+    <p id="msg" class="text-success"></p>
+    <hr />
+  </div>
+  <div class="container-fluid text-center my-3">
+    <form class="form-horizontal">
+      <div class="form-check-inline d-flex align-items-center justify-content-center">
+        <label for="text" class="col-form-label m-3">Scheme Code: </label>
+        <input type="text" name="searchBar" id="searchBar" class="input-group-text m-3"
+          placeholder="Enter scheme code..." autocomplete="on" />
+      </div>
+      <input type="submit" class="btn btn-primary my-4" onclick="fund(this.form); return false;" />
+    </form>
+  </div>
+  <div class="container-fluid my-4 text-center">
+    <p id="fundlist" class="my3 text-success"></p>
+  </div>
+  <script>
+    async function sfind() {
+      const res = await fetch("https://api.mfapi.in/mf");
+      const data = await res.json();
+      document.getElementById("msg").innerHTML = data.length;
+    }
+    sfind();
+
+    async function fund(form) {
+      const res = await fetch("https://api.mfapi.in/mf");
+      const data = await res.json();
+      console.log(data);
+      var e = form.searchBar.value;
+      var found = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i]["schemeCode"] === Number(e.trim())) {
+          document.getElementById("fundlist").innerHTML =
+            "<span>Schme name is: </span>" + data[i]["schemeName"];
+          var found = 1;
+          break;
+        }
+        if (found == 0) {
+          document.getElementById("fundlist").innerHTML =
+            "<span class='text-danger'>Invalid scheme code</span>";
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
